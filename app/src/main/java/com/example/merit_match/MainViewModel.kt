@@ -1,14 +1,10 @@
 package com.example.merit_match
 
-import android.graphics.BitmapFactory
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import java.io.ByteArrayInputStream
 
 
 class MainViewModel : ViewModel() {
@@ -35,6 +31,7 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+
     fun createUser(user: User) {
         infoState.value.copy(loading = true)
         viewModelScope.launch {
@@ -60,6 +57,7 @@ class MainViewModel : ViewModel() {
     data class InfoState(
         val loading: Boolean = false,
         val user: User = User("", "", "", 0),
+        val tasks: Tasks = Tasks(emptyList()),
         val error: String? = null
     )
 }

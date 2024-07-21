@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,11 +30,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -53,186 +57,240 @@ fun LoginPage(navController: NavController){
     val context = LocalContext.current
 
     val family = FontFamily(
-        Font(R.font.sdasian)
+        Font(R.font.gilroy)
     )
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xfffff0db))
-    ){
-        Image(
-            modifier = Modifier
-                .offset(y = 170.dp)
-                .align(Alignment.TopCenter)
-                .size(150.dp),
-            painter = painterResource(id = R.drawable.yinyang),
-            contentDescription = "yin yang"
-        )
-        Text(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .offset(y = 90.dp, x = 10.dp),
-            text = "MERIT",
-            fontFamily = family,
-            color = Color(0xff3a3f49),
-            fontSize = 80.sp
-        )
-        Text(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .offset(y = 90.dp, x = (-5).dp),
-            text = "MATCH",
-            fontFamily = family,
-            color = Color(0xff3a3f49),
-            fontSize = 80.sp
-        )
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .offset(x = 30.dp),
-            text = "username:",
-            fontFamily = family,
-            color = Color(0xff3a3f49),
-            fontSize = 40.sp
-        )
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .offset(y = 70.dp, x = 30.dp),
-            text = "password:",
-            fontFamily = family,
-            color = Color(0xff3a3f49),
-            fontSize = 40.sp
-        )
-
-        TextField(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .offset(x = (-10).dp)
-                .width(190.dp),
-            textStyle = LocalTextStyle
-                .current.copy(
-                    color = Color(0xfffff0db),
-                    fontSize = 30.sp,
-                    fontFamily = family
-                ),
-            value = user,
-            onValueChange = {
-                user = it
-                mainViewModel.fetchUser(user)
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xffb24434)
+            .background(
+                color = Color.Black
             )
-        )
-        TextField(
+    ) {
+        Box(
             modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .offset(y = 70.dp, x = (-10).dp)
-                .width(190.dp),
-            textStyle = LocalTextStyle
-                .current.copy(
-                    color = Color(0xfffff0db),
-                    fontSize = 30.sp,
-                    fontFamily = family
-                ),
-            value = password,
-            onValueChange = {
-                password = it
-                mainViewModel.fetchUser(user)
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xffb24434)
-            )
-        )
-
-        if (mode == 1){
+                .offset(y = -(260).dp)
+                .align(Alignment.Center)
+                .clip(RoundedCornerShape(30.dp))
+                .height(100.dp)
+                .width(400.dp)
+                .background(Color.Black.copy(0.4f))
+        ){
             Text(
                 modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .offset(y = 140.dp, x = 30.dp),
-                text = "email:",
-                fontFamily = family,
-                color = Color(0xff3a3f49),
-                fontSize = 40.sp
+                    .align(Alignment.TopCenter)
+                    .offset(y = 4.dp),
+                text = "MERIT MATCH",
+                fontFamily = FontFamily.Monospace,
+                color = Color.White,
+                fontSize = 40.sp,
+                fontWeight = FontWeight.ExtraBold
             )
-            TextField(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .offset(y = 140.dp, x = (-10).dp)
-                        .width(190.dp),
-            textStyle = LocalTextStyle
-                .current.copy(
-                    color = Color(0xfffff0db),
-                    fontSize = 30.sp,
-                    fontFamily = family
-                ),
-            value = email,
-            onValueChange = { email = it },
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xffb24434)
-            )
+            Text(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .offset(y = 60.dp),
+                text = "what goes around comes around",
+                fontFamily = FontFamily.Monospace,
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold
             )
         }
-        Text(
+        Box(
             modifier = Modifier
-                .align(Alignment.BottomStart)
-                .offset(x = 30.dp, y = (-70).dp),
-            text = if (mode == 0) "new user?" else "already have an account?",
-            fontFamily = family,
-            color = Color(0xff3a3f49),
-            fontSize = 30.sp
-        )
-        Text(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .offset(x = 35.dp, y = (-40).dp)
-                .clickable {
-                    mode = (mode + 1) % 2
-                },
-            text = if (mode == 1) "LOGIN" else "REGISTER",
-            fontFamily = family,
-            color = Color(0xffb24434),
-            fontSize = 30.sp
-        )
-
-        Button(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .offset(x = (-30).dp, y = (-140).dp),
-            onClick = {
-                if (mode == 0){
-                    if(viewState.user.username != "404 error"){
-                        if (viewState.user.password == password){
-                            navController.navigate(Screen.HomePage.route)
-                        }
-                        else{
-                            Toast.makeText(context, "incorrect password", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                    else{
-                        Toast.makeText(context, "no such user exits", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                else{
-                    mainViewModel.createUser(user = User(user, password, email, 100))
-
-                    if(!viewState.loading){
-                        Toast.makeText(context, "created successfully", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xffb24434))
-        ) {
+                .offset(y = 50.dp)
+                .align(Alignment.Center)
+                .clip(RoundedCornerShape(40.dp))
+                .height(500.dp)
+                .width(400.dp)
+                .background(Color.Black.copy(0.4f))
+        ){
             Text(
                 modifier = Modifier
-                    .padding(start = 15.dp, end = 15.dp, top = 3.dp, bottom = 3.dp),
-                text = if (mode == 1) "REGISTER" else "LOGIN",
-                fontFamily = family,
-                color = Color(0xfffff0db),
-                fontSize = 40.sp
+                    .align(Alignment.TopCenter)
+                    .offset(y = 4.dp),
+                text = if (mode == 0) "LOGIN" else "REGISTER",
+                fontFamily = FontFamily.Monospace,
+                color = Color.White,
+                fontSize = 40.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+            Text(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .offset(y = 70.dp, x = 20.dp),
+                text = "username",
+                fontFamily = FontFamily.Monospace,
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+            TextField(
+                modifier = Modifier
+                    .offset(y = -(110).dp, x = 15.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .align(Alignment.CenterStart)
+                    .width(350.dp),
+                textStyle = LocalTextStyle
+                    .current.copy(
+                        color = Color(0xfffff0db),
+                        fontSize = 30.sp,
+                        fontFamily = FontFamily.Monospace
+                    ),
+                value = user,
+                label = { Text(text = "username") },
+                onValueChange = {
+                    user = it
+                    mainViewModel.fetchUser(user)
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Black
+                )
+            )
+
+            Text(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .offset(y = 195.dp, x = 20.dp),
+                text = "password",
+                fontFamily = FontFamily.Monospace,
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+            TextField(
+                modifier = Modifier
+                    .offset(y = 15.dp, x = 15.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .align(Alignment.CenterStart)
+                    .width(350.dp),
+                textStyle = LocalTextStyle
+                    .current.copy(
+                        color = Color(0xfffff0db),
+                        fontSize = 30.sp,
+                        fontFamily = FontFamily.Monospace
+                    ),
+                value = password,
+                label = { Text(text = "password") },
+                onValueChange = {
+                    password = it
+                    mainViewModel.fetchUser(user)
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color.Black
+                )
+            )
+
+            if (mode == 1){
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .offset(y = 320.dp, x = 20.dp),
+                    text = "e-mail",
+                    fontFamily = FontFamily.Monospace,
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold
+                )
+                TextField(
+                    modifier = Modifier
+                        .offset(y = 140.dp, x = 15.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .align(Alignment.CenterStart)
+                        .width(350.dp),
+                    textStyle = LocalTextStyle
+                        .current.copy(
+                            color = Color(0xfffff0db),
+                            fontSize = 30.sp,
+                            fontFamily = FontFamily.Monospace
+                        ),
+                    value = email,
+                    label = { Text(text = "email") },
+                    onValueChange = {
+                        email = it
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Black
+                    )
+                )
+            }
+
+            Text(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .offset(y = -(15).dp, x =-(20).dp)
+                    .clickable {
+                        if (mode == 0){
+                            if(viewState.user.username != "404 error"){
+                                if (viewState.user.password == password){
+                                    navController.navigate(Screen.HomePage.route)
+                                }
+                                else{
+                                    Toast.makeText(context, "incorrect password", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            else{
+                                Toast.makeText(context, "no such user exits", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        else{
+                            mainViewModel.createUser(user = User(user, password, email, 100))
+
+                            if(!viewState.loading){
+                                Toast.makeText(context, "created successfully", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    },
+                text = if (mode == 1) "register" else "login",
+                fontFamily = FontFamily.Monospace,
+                color = Color.White,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
+        Box(
+            modifier = Modifier
+                .offset(x = -(103.dp), y = 360.dp)
+                .align(Alignment.Center)
+                .clip(RoundedCornerShape(30.dp))
+                .height(100.dp)
+                .width(195.dp)
+                .background(color = if (mode == 0) Color.White.copy(0.4f) else Color.Black.copy(0.4f))
+                .clickable {
+                    mode = 0
+                }
+        ){
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                text = "LOGIN",
+                fontFamily = FontFamily.Monospace,
+                color = if (mode == 0) Color.Black else Color.White,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+        }
+        Box(
+            modifier = Modifier
+                .offset(x = (103.dp), y = 360.dp)
+                .align(Alignment.Center)
+                .clip(RoundedCornerShape(30.dp))
+                .height(100.dp)
+                .width(195.dp)
+                .background(color = if (mode == 1) Color.White.copy(0.4f) else Color.Black.copy(0.4f))
+                .clickable {
+                    mode = 1
+                }
+        ){
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                text = "REGISTER",
+                fontFamily = FontFamily.Monospace,
+                color = if (mode == 1) Color.Black else Color.White,
+                fontSize = 30.sp,
+                fontWeight = FontWeight.ExtraBold
             )
         }
     }
-
 }

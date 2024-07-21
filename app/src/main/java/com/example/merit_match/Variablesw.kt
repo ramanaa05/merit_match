@@ -6,3 +6,14 @@ data class User(
     val email: String,
     val karmaPoints: Int
 )
+
+data class Task(
+    val id: Int,
+    val task: String,
+    val username: String,
+    val karmaPoints: Int
+)
+
+data class Tasks(
+    val tasks: List<Task>
+)
