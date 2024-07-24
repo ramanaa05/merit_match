@@ -18,9 +18,39 @@ private val retrofit = Retrofit
 val apiService: ApiServices = retrofit.create(ApiServices::class.java)
 
 interface ApiServices {
-    @GET("/users/")
-    suspend fun getUserDetails(@Query("username") username: String): User
+    @POST("/users/authentication")
+    suspend fun getUserDetails(@Body user: User): User
 
     @POST("/users/")
     suspend fun createUser(@Body user: User): User
+
+    @GET("/tasks/")
+    suspend fun getTasks(@Query("username") username: String): Tasks
+
+    @POST("/tasks/")
+    suspend fun createTask(@Body task: Task): Task
+
+    @GET("/tasks/all")
+    suspend fun getAllTasks(): Tasks
+
+    @GET("/tasks/reserved/")
+    suspend fun getReservedTasks(@Query("username") username: String): Tasks
+
+    @POST("/tasks/reserve/")
+    suspend fun reserve(@Body task: Task): Task
+
+    @POST("/tasks/approve/")
+    suspend fun approveTask(@Body status: ApprovalStatus): ApprovalStatus
+
+    @GET("/tasks/approve/all")
+    suspend fun getAllStatus(): StatusList
+
+    @POST("/tasks/all/delete")
+    suspend fun deleteTask(@Body task: Task): Task
+
+    @POST("/tasks/approve/delete")
+    suspend fun deleteApproval(@Body status: ApprovalStatus): ApprovalStatus
+
+    @POST("/tasks/transaction/")
+    suspend fun transaction(@Body task: Task): Task
 }

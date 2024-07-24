@@ -1,61 +1,45 @@
 package com.example.merit_match
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.merit_match.ui.theme.Merit_matchTheme
-
+val theUser = mutableStateOf(User("", "", "", 0))
+val task_list = mutableStateListOf<Task>()
+val task_list_all = mutableStateListOf<Task>()
+val task_list_reserved = mutableStateListOf<Task>()
+val task_available_display = mutableStateListOf<Task>()
+val task_posted = mutableStateListOf<Task>()
+val status_list = mutableStateListOf<ApprovalStatus>()
+val status_id = mutableStateListOf<Int>()
+val pageFlag = mutableStateOf(0)
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Merit_matchTheme {
                 Navigation()
+                if (pageFlag.value == 1){
+                    Confirmation()
+                }
             }
         }
     }
 }
 
-@Composable
-fun UserInfoScreen(viewModel: MainViewModel) {
-    val state = viewModel.infoState.value
-    viewModel.fetchUser("ramanaa")
-
-    var loading by remember {
-        mutableStateOf(viewModel.infoState.value.loading)
-    }
-    var a by remember {
-        mutableStateOf(true)
-    }
-
-    if (state.error != null) {
-        // Show error message
-        Text(text = state.error)
-    }
-    else {
-        // Show user information
-        Column {
-            Text(text = loading.toString())
-            Text(text = "Username: ${state.user.username}")
-            Text(text = "Email: ${state.user.email}")
-            Text(text = "Karma Points: ${state.user.karmaPoints}")
-        }
-    }
-
-    LaunchedEffect(key1 = a) {
-        loading = viewModel.infoState.value.loading
-        a = !a
-    }
-}
