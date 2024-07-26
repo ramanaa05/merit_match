@@ -31,6 +31,8 @@ class UserBase(BaseModel):
     password: str
     email: str
     karmaPoints: int
+    rating: float
+    ratingTotal: int
 
 class TaskBase(BaseModel):
     id: int
@@ -61,6 +63,8 @@ db_dependency = Annotated[Session, Depends(get_db)]
         
 @app.post("/users/", status_code = status.HTTP_201_CREATED)
 async def create_user(user: UserBase, db: db_dependency):
+    user.rating = 0
+    user.ratingTotal = 0
     hashedPassword = pwd_context.hash(user.password)
     user.password = hashedPassword
     db_user = models.User(**user.dict())
@@ -68,6 +72,21 @@ async def create_user(user: UserBase, db: db_dependency):
     db.commit()
     return user
 
+
+@app.post("/users/rate/", status_code = status.HTTP_201_CREATED)
+async def rate_user(user: UserBase, db: db_dependency):
+    user_db = db.query(models.User).filter(models.User.username == user.username).first()
+    user_db.rating = user.rating
+    user_db.ratingTotal = user_db.ratingTotal+1
+
+    db.commit()
+    db.refresh(user_db)
+    return user
+
+@app.get("/user/rating/", status_code = status.HTTP_200_OK)
+async def get_rating(username: str, db: db_dependency):
+    user = db.query(models.User).filter(models.User.username == username).first()
+    return {"rating": user.rating}
 
 @app.post("/users/authentication", status_code = status.HTTP_200_OK)
 async def get_user(user: UserBase, db: db_dependency):
@@ -102,7 +121,6 @@ async def create_task(task: TaskBase, db: db_dependency):
         db.add(db_task)
         db.commit()
     else:
-        print("hello")
         db_history = db.query(models.TaskHistory).filter(models.TaskHistory.id == task.id).first() 
         db_task.task = task.task
         db_task.karmaPoints = task.karmaPoints

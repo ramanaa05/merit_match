@@ -9,6 +9,7 @@ class User(Base):
 	email = Column(String(300))
 	karmaPoints = Column(Integer)
 	rating = Column(Float)
+	ratingTotal = Column(Integer)
 
 class Tasks(Base):
 	__tablename__ = "tasks"
