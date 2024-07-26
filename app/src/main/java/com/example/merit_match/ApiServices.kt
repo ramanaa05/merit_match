@@ -1,5 +1,6 @@
 package com.example.merit_match
 
+import android.media.Rating
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
@@ -56,4 +57,10 @@ interface ApiServices {
 
     @POST("/tasks/transaction/")
     suspend fun transaction(@Body task: Task): Task
+
+    @POST("/users/rate/")
+    suspend fun rateUser(@Body user: User): User
+
+    @GET("/user/rating/")
+    suspend fun getRating(@Query("username") username: String): RatingUser
 }

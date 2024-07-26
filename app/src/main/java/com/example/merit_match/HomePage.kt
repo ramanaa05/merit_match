@@ -345,18 +345,28 @@ fun HomePage(navController: NavController){
                                         mainViewModel.reserveTask(add_to_reserved)
                                         mainViewModel.approveTask(approval_status)
                                         task_list_reserved.add(add_to_reserved)
-                                        task_available_display.removeAt(it)
                                         task_list.removeAt(it)
                                         history.add(
                                             History(
-                                                task_list_reserved[it].id,
-                                                task_list_reserved[it].task,
-                                                task_list_reserved[it].username,
-                                                task_list_reserved[it].karmaPoints,
-                                                task_list_reserved[it].reserved,
+                                                task_available_display[it].id,
+                                                task_available_display[it].task,
+                                                task_available_display[it].username,
+                                                task_available_display[it].karmaPoints,
+                                                task_available_display[it].reserved,
                                                 "reserved"
                                             )
                                         )
+                                        history_all.add(
+                                            History(
+                                                task_available_display[it].id,
+                                                task_available_display[it].task,
+                                                task_available_display[it].username,
+                                                task_available_display[it].karmaPoints,
+                                                task_available_display[it].reserved,
+                                                "reserved"
+                                            )
+                                        )
+                                        task_available_display.removeAt(it)
                                         if (!viewState.loading){
                                             Toast.makeText(context, "Task reserved", Toast.LENGTH_SHORT).show()
                                         }
@@ -535,6 +545,7 @@ fun HomePage(navController: NavController){
                                                     .padding(end = 10.dp),
                                                 onClick = {
                                                     pageFlag.value = 1
+                                                    rateUser.value = task_posted[it].reserved
                                                 }
                                             ) {
                                                 Text(
@@ -557,21 +568,25 @@ fun HomePage(navController: NavController){
                                                         index = i
                                                     }
                                                 }
-                                                task_list_all.removeAt(index)
-                                                status_id.removeAt(temp)
-                                                status_list.removeAt(temp)
-                                                task_posted.removeAt(it)
+
 
                                                 for (i in history.indices){
                                                     if (history[i].id == task_posted[it].id){
                                                         index = i
                                                     }
                                                 }
+
+                                                task_list_all.removeAt(index)
+                                                status_id.removeAt(temp)
+                                                status_list.removeAt(temp)
+                                                task_posted.removeAt(it)
                                                 history[index].status = "completed"
+                                                history_all[index].status = "completed"
                                             }
                                             else{
                                                 Toast.makeText(context, "Not enough karma points", Toast.LENGTH_SHORT).show()
                                             }
+                                            transaction.value = false
                                         }
                                     }
                                 }

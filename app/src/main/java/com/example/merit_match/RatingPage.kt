@@ -15,17 +15,25 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 val rated = mutableStateListOf(0, 0, 0, 0, 0)
 
 @Composable
 fun RatingPage(){
+    var mainViewModel: MainViewModel = viewModel()
+    mainViewModel.fetchRating(rateUser.value)
+    val viewState by mainViewModel.infoState
     AlertDialog(
         modifier = Modifier,
         onDismissRequest = {
@@ -46,7 +54,7 @@ fun RatingPage(){
                                 modifier = Modifier.size(30.dp)
                                     .clickable {
                                         if (it == 0){
-                                            if (rated[it+1] == 0){
+                                            if (rated[1] == 0){
                                                 rated[it] = 0
                                             }
                                         }
@@ -95,7 +103,12 @@ fun RatingPage(){
         },
         confirmButton = {
             Button(
-                onClick = { pageFlag.value = 0 }
+                onClick = {
+                    pageFlag.value = 0
+                    mainViewModel.rateUser(
+                        User(rateUser.value, "", "", 0, (viewState.user.rating + rated.sum())/(viewState.user.ratingTotal+1), viewState.user.ratingTotal+1)
+                    )
+                }
             ) {
                 Text("Yes")
             }

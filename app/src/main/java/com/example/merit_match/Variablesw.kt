@@ -4,7 +4,9 @@ data class User(
     var username: String,
     var password: String,
     var email: String,
-    var karmaPoints: Int
+    var karmaPoints: Int,
+    var rating: Int,
+    var ratingTotal: Int
 )
 
 data class Task(
@@ -39,4 +41,8 @@ data class History(
 
 data class HistoryList(
     val history: List<History>
+)
+
+data class RatingUser(
+    val rating: Int
 )

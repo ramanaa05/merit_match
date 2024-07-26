@@ -18,7 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.merit_match.ui.theme.Merit_matchTheme
-val theUser = mutableStateOf(User("", "", "", 0))
+val theUser = mutableStateOf(User("", "", "", 0, 0, 0))
 val task_list = mutableStateListOf<Task>()
 val task_list_all = mutableStateListOf<Task>()
 val task_list_reserved = mutableStateListOf<Task>()
@@ -29,6 +29,7 @@ val status_id = mutableStateListOf<Int>()
 val pageFlag = mutableStateOf(0)
 val taskGlobal = mutableStateOf(Task(0, "", "", 0, ""))
 val history = mutableStateListOf<History>()
+val history_all = mutableStateListOf<History>()
 val rateUser = mutableStateOf("")
 
 class MainActivity : ComponentActivity() {

@@ -56,7 +56,7 @@ fun LoginPage(navController: NavController){
     var email by remember{ mutableStateOf("") }
     var mode by remember { mutableStateOf(0) }
     var mainViewModel: MainViewModel = viewModel()
-    mainViewModel.fetchUser(User(username = user, password = password, email = email, 0))
+    mainViewModel.fetchUser(User(username = user, password = password, email = email, 0, 0, 0))
     mainViewModel.fetchAllTasks()
     mainViewModel.fetchAllStatus()
     mainViewModel.fetchHistory()
@@ -156,7 +156,7 @@ fun LoginPage(navController: NavController){
                         placeholder = { Text(text = "username") },
                         onValueChange = {
                             user = it
-                            mainViewModel.fetchUser(User(username = user, password = password, email = email, 0))
+                            mainViewModel.fetchUser(User(username = user, password = password, email = email, 0, 0, 0))
                             mainViewModel.fetchTasks(user)
                             mainViewModel.fetchReservedTasks(user)
                         },
@@ -189,7 +189,7 @@ fun LoginPage(navController: NavController){
                         placeholder = { Text(text = "password") },
                         onValueChange = {
                             password = it
-                            mainViewModel.fetchUser(User(username = user, password = password, email = email, 0))
+                            mainViewModel.fetchUser(User(username = user, password = password, email = email, 0, 0, 0))
                         },
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color.Black
@@ -292,13 +292,16 @@ fun LoginPage(navController: NavController){
                                             status_id.add(i.id)
                                         }
                                         val temp = mutableListOf<Int>()
+                                        history_all.clear()
                                         for (i in viewState.history.history.indices){
                                             temp.add(i)
+                                            history_all.add(viewState.history.history[i])
                                         }
                                         history.clear()
                                         for (i in temp){
                                             if ((viewState.history.history[i].username == user) or (viewState.history.history[i].reserved == user)){
                                                 history.add(viewState.history.history[i])
+                                                history_all.add(viewState.history.history[i])
                                             }
                                         }
 
@@ -310,7 +313,7 @@ fun LoginPage(navController: NavController){
                                         .show()
                                 }
                             } else {
-                                mainViewModel.createUser(user = User(user, password, email, 100))
+                                mainViewModel.createUser(user = User(user, password, email, 100, 0, 0))
 
                                 if (!viewState.loading) {
                                     Toast

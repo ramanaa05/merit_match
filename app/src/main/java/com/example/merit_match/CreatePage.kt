@@ -55,7 +55,7 @@ fun CreatePage(navController: NavController){
     val family = FontFamily(
         Font(R.font.helvetica)
     )
-    for (i in task_list_all){
+    for (i in history_all){
         if(i.id > max_id){
             max_id = i.id
         }
@@ -263,6 +263,16 @@ fun CreatePage(navController: NavController){
                         )
                     )
                     history.add(
+                        History(
+                            id = max_id+1,
+                            task = description,
+                            username = theUser.value.username,
+                            karmaPoints = karma.toInt(),
+                            reserved = "",
+                            status = "posted"
+                        )
+                    )
+                    history_all.add(
                         History(
                             id = max_id+1,
                             task = description,

@@ -73,6 +73,47 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun fetchRating(username: String) {
+        infoState.value.copy(loading = true)
+        viewModelScope.launch {
+            try {
+                // Fetch user details
+                val response = apiService.getRating(username)
+                _infoState.value = _infoState.value.copy(
+                    loading = false,
+                    user = infoState.value.user.copy(rating = response.rating),
+                    error = null
+                )
+            } catch (e: Exception) {
+                // Handle error
+                _infoState.value = _infoState.value.copy(
+                    loading = false,
+                    error = "Error: ${e.message}"
+                )
+            }
+        }
+    }
+
+    fun rateUser(user: User) {
+        infoState.value.copy(loading = true)
+        viewModelScope.launch {
+            try {
+                // Fetch user details
+                val response = apiService.rateUser(user)
+                _infoState.value = _infoState.value.copy(
+                    loading = false,
+                    error = null
+                )
+            } catch (e: Exception) {
+                // Handle error
+                _infoState.value = _infoState.value.copy(
+                    loading = false,
+                    error = "Error: ${e.message}"
+                )
+            }
+        }
+    }
+
     fun fetchAllTasks() {
         infoState.value.copy(loading = true)
         viewModelScope.launch {
@@ -280,7 +321,7 @@ class MainViewModel : ViewModel() {
     // InfoState data class to hold the state of user information
     data class InfoState(
         val loading: Boolean = false,
-        val user: User = User("", "", "", 0),
+        val user: User = User("", "", "", 0, 0, 0),
         val tasks: Tasks = Tasks(emptyList()),
         val allTasks: Tasks = Tasks(emptyList()),
         val reservedTasks: Tasks = Tasks(emptyList()),
