@@ -32,5 +32,15 @@ fun Navigation(){
         ){
             CreatePage(navController)
         }
+        composable(
+            route = Screen.Edit.route
+        ){
+            Edit(navController)
+        }
+        composable(
+            route = Screen.History.route
+        ){
+            History(navController)
+        }
     }
 }

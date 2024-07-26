@@ -93,6 +93,26 @@ class MainViewModel : ViewModel() {
             }
         }
     }
+    fun fetchHistory() {
+        infoState.value.copy(loading = true)
+        viewModelScope.launch {
+            try {
+                // Fetch user details
+                val response = apiService.getHistory()
+                _infoState.value = _infoState.value.copy(
+                    loading = false,
+                    history = response,
+                    error = null
+                )
+            } catch (e: Exception) {
+                // Handle error
+                _infoState.value = _infoState.value.copy(
+                    loading = false,
+                    error = "Error: ${e.message}"
+                )
+            }
+        }
+    }
 
     fun fetchAllStatus() {
         infoState.value.copy(loading = true)
@@ -264,6 +284,7 @@ class MainViewModel : ViewModel() {
         val tasks: Tasks = Tasks(emptyList()),
         val allTasks: Tasks = Tasks(emptyList()),
         val reservedTasks: Tasks = Tasks(emptyList()),
+        val history: HistoryList = HistoryList(emptyList()),
         val statusList: StatusList = StatusList(emptyList()),
         val error: String? = null
     )

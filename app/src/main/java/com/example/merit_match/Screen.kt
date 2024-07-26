@@ -4,4 +4,6 @@ sealed class Screen(val route: String) {
     data object LoginPage : Screen("login_page")
     data object HomePage : Screen("home_page")
     data object CreatePage: Screen("create_page")
+    data object Edit: Screen("edit")
+    data object History: Screen("history")
 }

@@ -12,7 +12,7 @@ fun Confirmation(){
         onDismissRequest = {
             pageFlag.value = 0
         },
-        title = { Text(text = "Confirm Deletion") },
+        title = { Text(text = "Confirm Transaction") },
         text = { Text(text = "Are you sure you want to move forward with the transaction? Once paid, you cannot claim for a refund") },
         confirmButton = {
             Button(
@@ -23,7 +23,7 @@ fun Confirmation(){
         },
         dismissButton = {
             Button(
-                onClick = { pageFlag.value = 0 }
+                onClick = { pageFlag.value = 2; transaction.value = true}
             ) {
                 Text("No")
             }

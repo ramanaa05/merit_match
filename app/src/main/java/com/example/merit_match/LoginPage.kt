@@ -59,6 +59,7 @@ fun LoginPage(navController: NavController){
     mainViewModel.fetchUser(User(username = user, password = password, email = email, 0))
     mainViewModel.fetchAllTasks()
     mainViewModel.fetchAllStatus()
+    mainViewModel.fetchHistory()
     val viewState by mainViewModel.infoState
     val context = LocalContext.current
 
@@ -290,7 +291,17 @@ fun LoginPage(navController: NavController){
                                             status_list.add(i)
                                             status_id.add(i.id)
                                         }
-                                        println(status_id)
+                                        val temp = mutableListOf<Int>()
+                                        for (i in viewState.history.history.indices){
+                                            temp.add(i)
+                                        }
+                                        history.clear()
+                                        for (i in temp){
+                                            if ((viewState.history.history[i].username == user) or (viewState.history.history[i].reserved == user)){
+                                                history.add(viewState.history.history[i])
+                                            }
+                                        }
+
                                         navController.navigate(Screen.HomePage.route)
                                     }
                                 } else {
@@ -356,22 +367,8 @@ fun LoginPage(navController: NavController){
                     )
                 }
             }
-
         }
     }
     
-    if (viewState.error != null){
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White.copy(0.6f))
-        ){
-            Text(
-                modifier = Modifier
-                    .align(Alignment.Center),
-                text = "counldn't connect",
-                fontSize = 40.sp
-            )
-        }
-    }
+
 }

@@ -9,9 +9,9 @@ data class User(
 
 data class Task(
     val id: Int,
-    val task: String,
+    var task: String,
     val username: String,
-    val karmaPoints: Int,
+    var karmaPoints: Int,
     val reserved: String
 )
 
@@ -26,4 +26,17 @@ data class ApprovalStatus(
 
 data class StatusList(
     val status: List<ApprovalStatus>
+)
+
+data class History(
+    val id: Int,
+    var task: String,
+    val username: String,
+    var karmaPoints: Int,
+    val reserved: String,
+    var status: String
+)
+
+data class HistoryList(
+    val history: List<History>
 )

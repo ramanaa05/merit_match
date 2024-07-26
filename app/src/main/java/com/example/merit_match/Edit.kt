@@ -1,6 +1,5 @@
 package com.example.merit_match
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -46,10 +44,9 @@ import androidx.navigation.NavController
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("InvalidColorHexValue")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CreatePage(navController: NavController){
+fun Edit(navController: NavController){
     val context = LocalContext.current
     var max_id = 0
     val family = FontFamily(
@@ -60,11 +57,11 @@ fun CreatePage(navController: NavController){
             max_id = i.id
         }
     }
-    var description by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf(taskGlobal.value.task) }
     var deadline = remember {
         mutableStateListOf("", "", "")
     }
-    var karma by remember { mutableStateOf("") }
+    var karma by remember { mutableStateOf(taskGlobal.value.karmaPoints.toString()) }
     val mainViewModel: MainViewModel = viewModel()
     val viewState by mainViewModel.infoState
     Box(
@@ -115,26 +112,28 @@ fun CreatePage(navController: NavController){
                 fontFamily = family,
                 fontSize = 20.sp
             )
-            TextField(
-                modifier = Modifier
-                    .padding(start = 10.dp)
-                    .width(370.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .defaultMinSize(minHeight = 200.dp),
-                value = description,
-                onValueChange = {
-                    description = it
-                },
-                textStyle = LocalTextStyle
-                    .current.copy(
-                        color = Color(0xfffff0db),
-                        fontSize = 20.sp,
-                        fontFamily = family
-                    ),
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color.Black.copy(alpha = 0.4f)
+            description?.let {
+                TextField(
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .width(370.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .defaultMinSize(minHeight = 200.dp),
+                    value = it,
+                    onValueChange = {
+                        description = it
+                    },
+                    textStyle = LocalTextStyle
+                        .current.copy(
+                            color = Color(0xfffff0db),
+                            fontSize = 20.sp,
+                            fontFamily = family
+                        ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        containerColor = Color.Black.copy(alpha = 0.4f)
+                    )
                 )
-            )
+            }
 
             Text(
                 modifier = Modifier
@@ -237,41 +236,32 @@ fun CreatePage(navController: NavController){
                 onClick = {
                     mainViewModel.createTask(
                         Task(
-                            id = max_id+1,
+                            id = taskGlobal.value.id,
                             task = description,
                             username = theUser.value.username,
                             karmaPoints = karma.toInt(),
-                            reserved = ""
+                            reserved = taskGlobal.value.reserved
                         )
                     )
-                    task_list_all.add(
-                        Task(
-                            id = max_id+1,
-                            task = description,
-                            username = theUser.value.username,
-                            karmaPoints = karma.toInt(),
-                            reserved = ""
-                        )
-                    )
-                    task_posted.add(
-                        Task(
-                            id = max_id+1,
-                            task = description,
-                            username = theUser.value.username,
-                            karmaPoints = karma.toInt(),
-                            reserved = ""
-                        )
-                    )
-                    history.add(
-                        History(
-                            id = max_id+1,
-                            task = description,
-                            username = theUser.value.username,
-                            karmaPoints = karma.toInt(),
-                            reserved = "",
-                            status = "posted"
-                        )
-                    )
+
+                    var index = 0;
+                    for (i in task_list_all.indices){
+                        if(task_list_all[i].id == taskGlobal.value.id){
+                            index = i
+                            break
+                        }
+                    }
+                    task_list_all[index].task = description
+                    task_list_all[index].karmaPoints = karma.toInt()
+
+                    for (i in task_posted.indices){
+                        if(task_posted[i].id == taskGlobal.value.id){
+                            index = i
+                            break
+                        }
+                    }
+                    task_posted[index].task = description
+                    task_posted[index].karmaPoints = karma.toInt()
 
                     if(!viewState.loading){
                         Toast.makeText(context, "task uploaded", Toast.LENGTH_SHORT).show()

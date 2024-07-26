@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -75,7 +76,7 @@ fun HomePage(navController: NavController){
         ) {
             Box(
                 modifier = Modifier
-                    .padding(top = 30.dp, start = 8.dp)
+                    .padding(top = 80.dp, start = 8.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .height(170.dp)
                     .width(375.dp)
@@ -254,7 +255,7 @@ fun HomePage(navController: NavController){
                         .size(38.dp)
                         .align(Alignment.CenterStart)
                         .clickable {
-
+                            navController.navigate(Screen.History.route)
                         }
                         .align(Alignment.CenterStart),
                     painter = painterResource(id = R.drawable.settings),
@@ -305,7 +306,7 @@ fun HomePage(navController: NavController){
                                     modifier = Modifier
                                         .padding(start = 5.dp, top = 5.dp, bottom = 5.dp),
                                     text = task_available_display[it].task,
-                                    color = Color.Black,
+                                    color = Color.White,
                                     fontSize = 25.sp,
                                     fontFamily = family
                                 )
@@ -346,6 +347,16 @@ fun HomePage(navController: NavController){
                                         task_list_reserved.add(add_to_reserved)
                                         task_available_display.removeAt(it)
                                         task_list.removeAt(it)
+                                        history.add(
+                                            History(
+                                                task_list_reserved[it].id,
+                                                task_list_reserved[it].task,
+                                                task_list_reserved[it].username,
+                                                task_list_reserved[it].karmaPoints,
+                                                task_list_reserved[it].reserved,
+                                                "reserved"
+                                            )
+                                        )
                                         if (!viewState.loading){
                                             Toast.makeText(context, "Task reserved", Toast.LENGTH_SHORT).show()
                                         }
@@ -389,6 +400,7 @@ fun HomePage(navController: NavController){
                                 )
                             }
                         }
+
                     }
                 }
             }
@@ -422,7 +434,7 @@ fun HomePage(navController: NavController){
                                     modifier = Modifier
                                         .padding(start = 5.dp, top = 5.dp, bottom = 5.dp),
                                     text = task_list_reserved[it].task,
-                                    color = Color.Black,
+                                    color = Color.White,
                                     fontSize = 25.sp,
                                     fontFamily = family
                                 )
@@ -470,7 +482,7 @@ fun HomePage(navController: NavController){
                                     modifier = Modifier
                                         .padding(start = 5.dp, top = 5.dp, bottom = 5.dp),
                                     text = task_posted[it].task,
-                                    color = Color.Black,
+                                    color = Color.White,
                                     fontSize = 25.sp,
                                     fontFamily = family
                                 )
@@ -482,43 +494,84 @@ fun HomePage(navController: NavController){
                                     fontSize = 15.sp,
                                     fontFamily = family
                                 )
-                                if (task_posted[it].id in status_id){
-                                    val temp = status_id.indexOf(task_posted[it].id)
-                                    if (!status_list[temp].approved){
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 10.dp),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    Box(
+                                        modifier = Modifier,
+                                    ){
                                         Button(
                                             modifier = Modifier
-                                                .padding(start = 220.dp),
+                                                .padding(end = 10.dp)
+                                                .align(Alignment.Center)
+                                                .size(45.dp)
+                                                .clip(RoundedCornerShape(100)),
                                             onClick = {
-                                                pageFlag.value = 1
-                                            }
-                                        ) {
-                                            Text(
-                                                modifier = Modifier,
-                                                text = "approve",
-                                                color = Color.Black,
-                                                fontSize = 15.sp,
-                                                fontFamily = family
+                                                taskGlobal.value = task_posted[it]
+                                                navController.navigate(Screen.Edit.route)
+                                            },
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color(0xff7a32cc4)
                                             )
+                                        ) {
                                         }
+                                        Image(
+                                            modifier = Modifier
+                                                .offset(x = (-5).dp)
+                                                .size(25.dp)
+                                                .align(Alignment.Center),
+                                            painter = painterResource(id = R.drawable.pencil),
+                                            contentDescription = "edit"
+                                        )
                                     }
-                                    if (transaction.value){
-                                        if (theUser.value.karmaPoints >= task_posted[it].karmaPoints){
-                                            mainViewModel.transaction(task_posted[it])
-                                            mainViewModel.deleteTask(task_posted[it])
-                                            mainViewModel.deleteApproval(status_list[temp])
-                                            var index = 0;
-                                            for ( i in task_list_all.indices){
-                                                if (task_list_all[i].id == task_posted[it].id){
-                                                    index = i
+                                    if (task_posted[it].id in status_id){
+                                        val temp = status_id.indexOf(task_posted[it].id)
+                                        if (!status_list[temp].approved){
+                                            Button(
+                                                modifier = Modifier
+                                                    .padding(end = 10.dp),
+                                                onClick = {
+                                                    pageFlag.value = 1
                                                 }
+                                            ) {
+                                                Text(
+                                                    modifier = Modifier,
+                                                    text = "approve",
+                                                    color = Color.Black,
+                                                    fontSize = 15.sp,
+                                                    fontFamily = family
+                                                )
                                             }
-                                            task_list_all.removeAt(index)
-                                            status_id.removeAt(temp)
-                                            status_list.removeAt(temp)
-                                            task_posted.removeAt(it)
                                         }
-                                        else{
-                                            Toast.makeText(context, "Not enough karma points", Toast.LENGTH_SHORT).show()
+                                        if (transaction.value){
+                                            if (theUser.value.karmaPoints >= task_posted[it].karmaPoints){
+                                                mainViewModel.transaction(task_posted[it])
+                                                mainViewModel.deleteTask(task_posted[it])
+                                                mainViewModel.deleteApproval(status_list[temp])
+                                                var index = 0;
+                                                for ( i in task_list_all.indices){
+                                                    if (task_list_all[i].id == task_posted[it].id){
+                                                        index = i
+                                                    }
+                                                }
+                                                task_list_all.removeAt(index)
+                                                status_id.removeAt(temp)
+                                                status_list.removeAt(temp)
+                                                task_posted.removeAt(it)
+
+                                                for (i in history.indices){
+                                                    if (history[i].id == task_posted[it].id){
+                                                        index = i
+                                                    }
+                                                }
+                                                history[index].status = "completed"
+                                            }
+                                            else{
+                                                Toast.makeText(context, "Not enough karma points", Toast.LENGTH_SHORT).show()
+                                            }
                                         }
                                     }
                                 }

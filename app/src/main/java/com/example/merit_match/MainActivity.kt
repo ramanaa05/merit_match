@@ -27,6 +27,10 @@ val task_posted = mutableStateListOf<Task>()
 val status_list = mutableStateListOf<ApprovalStatus>()
 val status_id = mutableStateListOf<Int>()
 val pageFlag = mutableStateOf(0)
+val taskGlobal = mutableStateOf(Task(0, "", "", 0, ""))
+val history = mutableStateListOf<History>()
+val rateUser = mutableStateOf("")
+
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +41,9 @@ class MainActivity : ComponentActivity() {
                 Navigation()
                 if (pageFlag.value == 1){
                     Confirmation()
+                }
+                if (pageFlag.value == 2){
+                    RatingPage()
                 }
             }
         }

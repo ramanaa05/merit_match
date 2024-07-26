@@ -33,6 +33,9 @@ interface ApiServices {
     @GET("/tasks/all")
     suspend fun getAllTasks(): Tasks
 
+    @GET("/tasks/history")
+    suspend fun getHistory(): HistoryList
+
     @GET("/tasks/reserved/")
     suspend fun getReservedTasks(@Query("username") username: String): Tasks
 
